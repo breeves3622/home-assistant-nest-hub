@@ -6,10 +6,7 @@ homeassistant:
   name: Home Assistant
   unit_system: us_customary
   time_zone: America/New_York
-  # Fill in your HTTPS external URL (required for Google Nest Hub casting)
-  # e.g., https://ha.yourdomain.com or https://xxx.ui.nabu.casa
-  # external_url: "https://your-ha-domain.com"
-  # internal_url: "http://192.168.1.xxx:8123"
+  external_url: "https://home.clanhanoi.net"
 
 # Google Cast Integration for Google Nest Home Hub
 cast:
@@ -18,13 +15,15 @@ cast:
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-    - 172.16.0.0/12
-    - 192.168.0.0/16
-    - 10.0.0.0/8
+    - 172.16.0.0/12    # Covers all Docker container subnets (172.16.0.0 - 172.31.255.255)
+    - 192.168.0.0/16   # Covers local LAN subnets
+    - 10.0.0.0/8       # Covers 10.x.x.x subnets
     - 127.0.0.1
     - ::1
   cors_allowed_origins:
     - "https://cast.home-assistant.io"
+    - "https://home.clanhanoi.net"
+    - "http://home.clanhanoi.net"
 
 # Lovelace Dashboards Configuration
 lovelace:

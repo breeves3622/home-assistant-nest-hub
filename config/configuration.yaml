@@ -15,9 +15,11 @@ cast:
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-    - 172.16.0.0/12    # Covers all Docker container subnets (172.16.0.0 - 172.31.255.255)
-    - 192.168.0.0/16   # Covers local LAN subnets
-    - 10.0.0.0/8       # Covers 10.x.x.x subnets
+    - 10.80.1.55
+    - 10.80.0.0/16
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
     - 127.0.0.1
     - ::1
   cors_allowed_origins:

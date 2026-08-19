@@ -91,3 +91,15 @@ lovelace:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+# Kimai Open-Source Time Tracker API Integration
+rest_command:
+  kimai_clock_in:
+    url: "http://kimai:8001/api/timesheets"
+    method: post
+    headers:
+      X-AUTH-USER: "admin@clanhanoi.net"
+      X-AUTH-TOKEN: "kimai_api_token_here"
+      Content-Type: "application/json"
+    payload: '{"begin": "{{ now().strftime("%Y-%m-%dT%H:%M:%S") }}", "project": 1, "activity": 1, "description": "Work Shift"}'
+

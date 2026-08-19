@@ -18,20 +18,39 @@ services:
       - "8123:8123"
     restart: unless-stopped
 
+  # Kimai Open-Source Time Tracking Database
+  kimai-db:
+    container_name: kimai-db
+    image: mariadb:10.11
+    environment:
+      - MYSQL_DATABASE=kimai
+      - MYSQL_USER=kimai
+      - MYSQL_PASSWORD=${KIMAI_DB_PASSWORD:-kimai_secret_pass}
+      - MYSQL_ROOT_PASSWORD=${KIMAI_DB_ROOT_PASSWORD:-kimai_root_pass}
+    volumes:
+      - kimai_db_data:/var/lib/mysql
+    restart: unless-stopped
+
+  # Kimai Open-Source Time Tracker Application
+  kimai:
+    container_name: kimai
+    image: kimai/kimai2:apache
+    environment:
+      - APP_ENV=prod
+      - TRUSTED_HOSTS=localhost,127.0.0.1,kimai,home.clanhanoi.net
+      - DATABASE_URL=mysql://kimai:${KIMAI_DB_PASSWORD:-kimai_secret_pass}@kimai-db:3306/kimai?charset=utf8mb4&serverVersion=10.11.0-MariaDB
+      - TZ=${TZ:-America/New_York}
+      - ADMINMAIL=admin@clanhanoi.net
+      - ADMINPASS=${KIMAI_ADMIN_PASSWORD:-changeme123}
+    volumes:
+      - kimai_data:/opt/kimai/var
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    depends_on:
+      - kimai-db
+
 volumes:
   ha_storage:
-    # If running on native Linux Docker directly (outside Windows/macOS VM), 
-    # network_mode: host is recommended for mDNS discovery of Google Cast / Nest Hub devices:
-    # network_mode: host
-
-  # Optional: Cloudflare Tunnel for secure HTTPS external URL (Required for Google Cast)
-  # To use: Set CLOUDFLARE_TUNNEL_TOKEN in Portainer Stack Environment Variables
-  cloudflared:
-    container_name: cloudflared
-    image: cloudflare/cloudflared:latest
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
-    profiles:
-      - tunnel
+  kimai_db_data:
+  kimai_data:

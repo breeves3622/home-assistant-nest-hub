@@ -8,10 +8,8 @@ homeassistant:
   time_zone: America/New_York
   external_url: "https://home.clanhanoi.net"
 
-# Google Cast Integration for Google Nest Home Hub
 cast:
 
-# HTTP & Proxy settings for Reverse Proxy / Cloudflare Tunnel / Portainer
 http:
   use_x_forwarded_for: true
   trusted_proxies:
@@ -20,6 +18,7 @@ http:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
+    - 100.64.0.0/10
     - 127.0.0.1
     - ::1
   cors_allowed_origins:
@@ -27,24 +26,58 @@ http:
     - "https://home.clanhanoi.net"
     - "http://home.clanhanoi.net"
 
-# Timers & Input Helpers for Work Break Tracker
+# Time Clock Helpers & Timers
 timer:
   work_break_timer:
-    name: "Work Break Timer"
+    name: "Break Countdown"
     duration: "00:15:00"
     icon: mdi:coffee-timer
 
 input_select:
-  work_status:
-    name: "Work Status"
+  work_shift_status:
+    name: "Shift Status"
     options:
+      - "Clocked Out"
       - "Working"
-      - "On 15-Min Break"
-      - "On Lunch Break"
-      - "Off Work"
+      - "On Paid Break"
+      - "On Lunch"
     icon: mdi:briefcase-clock
 
-# Lovelace Dashboards Configuration
+input_datetime:
+  shift_start_time:
+    name: "Shift Start Time"
+    has_date: true
+    has_time: true
+  lunch_start_time:
+    name: "Lunch Start Time"
+    has_date: true
+    has_time: true
+
+input_number:
+  today_worked_hours:
+    name: "Today Worked Hours"
+    initial: 0
+    min: 0
+    max: 24
+    step: 0.01
+    mode: box
+    unit_of_measurement: "hrs"
+  weekly_worked_hours:
+    name: "Weekly Worked Hours"
+    initial: 0
+    min: 0
+    max: 168
+    step: 0.01
+    mode: box
+    unit_of_measurement: "hrs"
+  total_lunch_minutes_today:
+    name: "Total Lunch Minutes Today"
+    initial: 0
+    min: 0
+    max: 480
+    step: 1
+    unit_of_measurement: "min"
+
 lovelace:
   mode: storage
   dashboards:
@@ -55,7 +88,6 @@ lovelace:
       show_in_sidebar: true
       filename: dashboards/nest_hub_dashboard.yaml
 
-# File Includes
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml

@@ -1,71 +1,97 @@
-title: Work & Home Dashboard
+title: Work Time Clock & Weekly Tracker
 views:
   - title: Home
     path: main
     icon: mdi:briefcase-clock
     cards:
-      # Header Card: Time, Date & Status
+      # Header Card: Status & Shift Summary
       - type: markdown
         content: >
-          # ☕ Work & Break Tracker
-          **Current Status:** {{ states('input_select.work_status') }}
+          # 💼 Work Time Clock
+          **Current Status:** {{ states('input_select.work_shift_status') }}
 
-      # Active Timer Card
+      # Today & Weekly Hours Summary Cards
+      - type: grid
+        title: Hours Summary
+        columns: 2
+        square: false
+        cards:
+          - type: tile
+            entity: input_number.today_worked_hours
+            name: "Today Worked"
+            icon: mdi:clock-check-outline
+
+          - type: tile
+            entity: input_number.weekly_worked_hours
+            name: "Weekly Total"
+            icon: mdi:calendar-week
+
+      # Primary Time Clock Action Buttons
+      - type: grid
+        title: Time Clock Controls
+        columns: 4
+        square: false
+        cards:
+          - type: button
+            name: Clock In
+            icon: mdi:briefcase-clock
+            tap_action:
+              action: call-service
+              service: script.clock_in
+
+          - type: button
+            name: 15-Min Break (Paid)
+            icon: mdi:coffee
+            tap_action:
+              action: call-service
+              service: script.start_15min_paid_break
+
+          - type: button
+            name: 30-Min Lunch (Unpaid)
+            icon: mdi:food-fork-drink
+            tap_action:
+              action: call-service
+              service: script.start_lunch_break
+
+          - type: button
+            name: Clock Out
+            icon: mdi:briefcase-off
+            tap_action:
+              action: call-service
+              service: script.clock_out
+
+      # Active Break Timer Countdown
       - type: tile
         entity: timer.work_break_timer
         name: "Break Countdown"
         icon: mdi:timer-sand
 
-      # Clock & Date Card
-      - type: markdown
-        content: >
-          ## {{ now().strftime('%I:%M %p') }}
-          **{{ now().strftime('%A, %B %d') }}**
-
-      # Work Break Quick Controls
-      - type: grid
-        title: Break Controls
-        columns: 3
-        square: false
-        cards:
-          - type: button
-            name: 15-Min Break
-            icon: mdi:coffee
-            tap_action:
-              action: call-service
-              service: script.start_15min_break
-
-          - type: button
-            name: 30-Min Lunch
-            icon: mdi:food-fork-drink
-            tap_action:
-              action: call-service
-              service: script.start_30min_lunch
-
-          - type: button
-            name: Back to Work
-            icon: mdi:briefcase-check
-            tap_action:
-              action: call-service
-              service: script.cancel_break
-
-      # Status Select & Controls
+      # Detailed Shift Times & Controls
       - type: entities
-        title: Status Selector
+        title: Shift Details
         entities:
-          - entity: input_select.work_status
-            name: "Work Status"
-          - entity: timer.work_break_timer
-            name: "Timer State"
+          - entity: input_select.work_shift_status
+            name: "Current Status"
+          - entity: input_datetime.shift_start_time
+            name: "Shift Started"
+          - entity: input_number.total_lunch_minutes_today
+            name: "Unpaid Lunch (Minutes)"
 
-      # Recast Button & Quick Tools
+      # Utility Controls
       - type: grid
-        title: Display Controls
+        title: Management Controls
         columns: 2
         square: false
         cards:
           - type: button
-            name: Recast Dashboard
+            name: Reset Weekly Hours
+            icon: mdi:refresh
+            tap_action:
+              action: call-service
+              service: script.reset_weekly_hours
+
+          - type: button
+            name: Recast to Nest Hub
             icon: mdi:cast
             tap_action:
               action: call-service
@@ -74,12 +100,3 @@ views:
                 entity_id: media_player.google_nest_hub
                 dashboard_path: nest-hub-dashboard
                 view_path: main
-
-          - type: button
-            name: Refresh View
-            icon: mdi:refresh
-            tap_action:
-              action: call-service
-              service: homeassistant.update_entity
-              target:
-                entity_id: timer.work_break_timer

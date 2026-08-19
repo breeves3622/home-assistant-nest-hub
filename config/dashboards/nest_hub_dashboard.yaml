@@ -1,102 +1,93 @@
-title: Work Time Clock & Weekly Tracker
+title: Work Time Clock
 views:
-  - title: Home
+  - title: Main
     path: main
-    icon: mdi:briefcase-clock
+    type: panel
     cards:
-      # Header Card: Status & Shift Summary
-      - type: markdown
-        content: >
-          # 💼 Work Time Clock
-          **Current Status:** {{ states('input_select.work_shift_status') }}
-
-      # Today & Weekly Hours Summary Cards
       - type: grid
-        title: Hours Summary
         columns: 2
         square: false
         cards:
-          - type: tile
-            entity: input_number.today_worked_hours
-            name: "Today Worked"
-            icon: mdi:clock-check-outline
+          # Left Column: Live Status, Time & Hours Summary
+          - type: vertical-stack
+            cards:
+              - type: markdown
+                content: >
+                  # 💼 {{ states('input_select.work_shift_status') | upper }}
+                  ### {{ now().strftime('%I:%M %p — %A, %b %d') }}
 
-          - type: tile
-            entity: input_number.weekly_worked_hours
-            name: "Weekly Total"
-            icon: mdi:calendar-week
+              - type: tile
+                entity: timer.work_break_timer
+                name: "Break Countdown"
+                icon: mdi:timer-sand-full
 
-      # Primary Time Clock Action Buttons
-      - type: grid
-        title: Time Clock Controls
-        columns: 4
-        square: false
-        cards:
-          - type: button
-            name: Clock In
-            icon: mdi:briefcase-clock
-            tap_action:
-              action: call-service
-              service: script.clock_in
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: tile
+                    entity: input_number.today_worked_hours
+                    name: "Today Worked"
+                    icon: mdi:clock-check-outline
 
-          - type: button
-            name: 15-Min Break (Paid)
-            icon: mdi:coffee
-            tap_action:
-              action: call-service
-              service: script.start_15min_paid_break
+                  - type: tile
+                    entity: input_number.weekly_worked_hours
+                    name: "Weekly Total"
+                    icon: mdi:calendar-week
 
-          - type: button
-            name: 30-Min Lunch (Unpaid)
-            icon: mdi:food-fork-drink
-            tap_action:
-              action: call-service
-              service: script.start_lunch_break
+          # Right Column: Big 1-Touch Action Buttons
+          - type: vertical-stack
+            cards:
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: button
+                    name: Clock In
+                    icon: mdi:briefcase-clock
+                    tap_action:
+                      action: call-service
+                      service: script.clock_in
 
-          - type: button
-            name: Clock Out
-            icon: mdi:briefcase-off
-            tap_action:
-              action: call-service
-              service: script.clock_out
+                  - type: button
+                    name: 15-Min Break
+                    icon: mdi:coffee
+                    tap_action:
+                      action: call-service
+                      service: script.start_15min_paid_break
 
-      # Active Break Timer Countdown
-      - type: tile
-        entity: timer.work_break_timer
-        name: "Break Countdown"
-        icon: mdi:timer-sand
+                  - type: button
+                    name: 30-Min Lunch
+                    icon: mdi:food-fork-drink
+                    tap_action:
+                      action: call-service
+                      service: script.start_lunch_break
 
-      # Detailed Shift Times & Controls
-      - type: entities
-        title: Shift Details
-        entities:
-          - entity: input_select.work_shift_status
-            name: "Current Status"
-          - entity: input_datetime.shift_start_time
-            name: "Shift Started"
-          - entity: input_number.total_lunch_minutes_today
-            name: "Unpaid Lunch (Minutes)"
+                  - type: button
+                    name: Clock Out
+                    icon: mdi:briefcase-off
+                    tap_action:
+                      action: call-service
+                      service: script.clock_out
 
-      # Utility Controls
-      - type: grid
-        title: Management Controls
-        columns: 2
-        square: false
-        cards:
-          - type: button
-            name: Reset Weekly Hours
-            icon: mdi:refresh
-            tap_action:
-              action: call-service
-              service: script.reset_weekly_hours
+              - type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: button
+                    name: Reset Week
+                    icon: mdi:refresh
+                    tap_action:
+                      action: call-service
+                      service: script.reset_weekly_hours
 
-          - type: button
-            name: Recast to Nest Hub
-            icon: mdi:cast
-            tap_action:
-              action: call-service
-              service: cast.show_lovelace_view
-              data:
-                entity_id: media_player.google_nest_hub
-                dashboard_path: nest-hub-dashboard
-                view_path: main
+                  - type: button
+                    name: Recast Screen
+                    icon: mdi:cast
+                    tap_action:
+                      action: call-service
+                      service: cast.show_lovelace_view
+                      data:
+                        entity_id: media_player.google_nest_hub
+                        dashboard_path: nest-hub-dashboard
+                        view_path: main

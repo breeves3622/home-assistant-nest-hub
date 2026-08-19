@@ -28,7 +28,7 @@ services:
       - MYSQL_PASSWORD=${KIMAI_DB_PASSWORD:-kimai_secret_pass}
       - MYSQL_ROOT_PASSWORD=${KIMAI_DB_ROOT_PASSWORD:-kimai_root_pass}
     volumes:
-      - kimai_db_data:/var/lib/mysql
+      - kimai_mariadb_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-pkimai_root_pass"]
       interval: 5s
@@ -58,5 +58,5 @@ services:
 
 volumes:
   ha_storage:
-  kimai_db_data:
+  kimai_mariadb_data:
   kimai_data:

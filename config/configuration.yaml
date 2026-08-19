@@ -27,6 +27,23 @@ http:
     - "https://home.clanhanoi.net"
     - "http://home.clanhanoi.net"
 
+# Timers & Input Helpers for Work Break Tracker
+timer:
+  work_break_timer:
+    name: "Work Break Timer"
+    duration: "00:15:00"
+    icon: mdi:coffee-timer
+
+input_select:
+  work_status:
+    name: "Work Status"
+    options:
+      - "Working"
+      - "On 15-Min Break"
+      - "On Lunch Break"
+      - "Off Work"
+    icon: mdi:briefcase-clock
+
 # Lovelace Dashboards Configuration
 lovelace:
   mode: storage

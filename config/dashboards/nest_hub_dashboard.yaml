@@ -1,100 +1,73 @@
-title: Nest Hub Dashboard
+title: Work & Home Dashboard
 views:
   - title: Home
     path: main
-    icon: mdi:home-assistant
+    icon: mdi:briefcase-clock
     type: grid
     square: false
     columns: 3
     cards:
-      # Header Card: Time, Date & Welcome Summary
+      # Header Card: Time, Date & Status
       - type: markdown
         content: >
-          # 🏠 Home Control
-          **Google Nest Hub Display**
+          # ☕ Work & Break Tracker
+          **Current Status:** {{ states('input_select.work_status') }}
 
-      # Weather Card
-      - type: weather-forecast
-        entity: weather.forecast_home # Replace with your weather entity
-        show_forecast: false
+      # Active Timer Card
+      - type: timer
+        entity: timer.work_break_timer
+        name: "Break Countdown"
 
-      # Clock / Date display or Quick Status
+      # Clock & Date Card
       - type: markdown
         content: >
           ## {{ now().strftime('%I:%M %p') }}
           **{{ now().strftime('%A, %B %d') }}**
 
-      # Quick Lighting Controls
+      # Work Break Quick Controls
       - type: grid
-        title: Lighting Controls
-        columns: 2
-        square: true
-        cards:
-          - type: button
-            name: Living Room
-            icon: mdi:sofa
-            tap_action:
-              action: toggle
-            entity: light.living_room_light
-
-          - type: button
-            name: Kitchen
-            icon: mdi:countertop
-            tap_action:
-              action: toggle
-            entity: light.kitchen_light
-
-          - type: button
-            name: Bedroom
-            icon: mdi:bed
-            tap_action:
-              action: toggle
-            entity: light.bedroom_light
-
-          - type: button
-            name: All Lights Off
-            icon: mdi:lightbulb-off
-            tap_action:
-              action: call-service
-              service: light.turn_off
-              target:
-                entity_id: all
-
-      # Climate Control
-      - type: thermostat
-        entity: climate.home_thermostat # Replace with your thermostat entity
-        name: Thermostat
-
-      # Media Player Control (Nest Hub or Speaker)
-      - type: media-control
-        entity: media_player.google_nest_hub # Replace with your Nest Hub media player
-
-      # Quick Scenes / Actions
-      - type: grid
-        title: Quick Scenes
+        title: Break Controls
         columns: 3
         square: false
         cards:
           - type: button
-            name: Movie Mode
-            icon: mdi:popcorn
+            name: 15-Min Break
+            icon: mdi:coffee
             tap_action:
               action: call-service
-              service: scene.turn_on
-              target:
-                entity_id: scene.movie_night
+              service: script.start_15min_break
 
           - type: button
-            name: Night Mode
-            icon: mdi:weather-night
+            name: 30-Min Lunch
+            icon: mdi:food-fork-drink
             tap_action:
               action: call-service
-              service: scene.turn_on
-              target:
-                entity_id: scene.good_night
+              service: script.start_30min_lunch
 
           - type: button
-            name: Recast View
+            name: Back to Work
+            icon: mdi:briefcase-check
+            tap_action:
+              action: call-service
+              service: script.cancel_break
+
+      # Status Select & Controls
+      - type: entities
+        title: Status Selector
+        entities:
+          - entity: input_select.work_status
+            name: "Work Status"
+          - entity: timer.work_break_timer
+            name: "Timer State"
+
+      # Recast Button & Quick Tools
+      - type: grid
+        title: Display Controls
+        columns: 2
+        square: false
+        cards:
+          - type: button
+            name: Recast Dashboard
             icon: mdi:cast
             tap_action:
               action: call-service
@@ -103,3 +76,12 @@ views:
                 entity_id: media_player.google_nest_hub
                 dashboard_path: nest-hub-dashboard
                 view_path: main
+
+          - type: button
+            name: Refresh View
+            icon: mdi:refresh
+            tap_action:
+              action: call-service
+              service: homeassistant.update_entity
+              target:
+                entity_id: timer.work_break_timer

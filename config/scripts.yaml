@@ -1,1 +1,105 @@
-# Home Assistant Scripts
+# Work & Break Timer Scripts
+
+start_15min_break:
+  alias: "Start 15-Minute Break"
+  icon: mdi:coffee
+  sequence:
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.work_status
+      data:
+        option: "On 15-Min Break"
+    - service: timer.start
+      target:
+        entity_id: timer.work_break_timer
+      data:
+        duration: "00:15:00"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "15 minute break started. Enjoy your break!"
+    - delay: "00:13:00"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "Warning! Your break is almost over. 2 minutes remaining!"
+    - delay: "00:02:00"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "Break time is over! Time to get back to work."
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.work_status
+      data:
+        option: "Working"
+
+start_30min_lunch:
+  alias: "Start 30-Minute Lunch"
+  icon: mdi:food-fork-drink
+  sequence:
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.work_status
+      data:
+        option: "On Lunch Break"
+    - service: timer.start
+      target:
+        entity_id: timer.work_break_timer
+      data:
+        duration: "00:30:00"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "30 minute lunch break started. Enjoy your lunch!"
+    - delay: "00:28:00"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "Warning! Your lunch break is almost over. 2 minutes remaining!"
+    - delay: "00:02:00"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "Lunch break is over! Time to get back to work."
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.work_status
+      data:
+        option: "Working"
+
+cancel_break:
+  alias: "End Break & Return to Work"
+  icon: mdi:briefcase-check
+  sequence:
+    - service: script.turn_off
+      target:
+        entity_id:
+          - script.start_15min_break
+          - script.start_30min_lunch
+    - service: timer.cancel
+      target:
+        entity_id: timer.work_break_timer
+    - service: input_select.select_option
+      target:
+        entity_id: input_select.work_status
+      data:
+        option: "Working"
+    - service: tts.speak
+      target:
+        entity_id: tts.google_en_com
+      data:
+        media_player_entity_id: media_player.google_nest_hub
+        message: "Welcome back! Work status set to Working."

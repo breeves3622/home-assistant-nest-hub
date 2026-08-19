@@ -3,9 +3,6 @@ views:
   - title: Home
     path: main
     icon: mdi:briefcase-clock
-    type: grid
-    square: false
-    columns: 3
     cards:
       # Header Card: Time, Date & Status
       - type: markdown

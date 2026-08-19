@@ -7,10 +7,11 @@ views:
     square: false
     columns: 3
     cards:
-      # Header Card: Time, Date & Weather Summary
-      - type: custom:mushroom-title-card
-        title: "Welcome Home"
-        subtitle: "Google Nest Hub Control Center"
+      # Header Card: Time, Date & Welcome Summary
+      - type: markdown
+        content: >
+          # 🏠 Home Control
+          **Google Nest Hub Display**
 
       # Weather Card
       - type: weather-forecast

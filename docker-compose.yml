@@ -29,6 +29,11 @@ services:
       - MYSQL_ROOT_PASSWORD=${KIMAI_DB_ROOT_PASSWORD:-kimai_root_pass}
     volumes:
       - kimai_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-pkimai_root_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     restart: unless-stopped
 
   # Kimai Open-Source Time Tracker Application
@@ -48,7 +53,8 @@ services:
       - "9099:8001"
     restart: unless-stopped
     depends_on:
-      - ha-kimai-db
+      ha-kimai-db:
+        condition: service_healthy
 
 volumes:
   ha_storage:

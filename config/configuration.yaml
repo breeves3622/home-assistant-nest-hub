@@ -95,7 +95,7 @@ scene: !include scenes.yaml
 # Kimai Open-Source Time Tracker API Integration
 rest_command:
   kimai_clock_in:
-    url: "http://kimai:8001/api/timesheets"
+    url: "http://ha-kimai:8001/api/timesheets"
     method: post
     headers:
       X-AUTH-USER: "admin@clanhanoi.net"

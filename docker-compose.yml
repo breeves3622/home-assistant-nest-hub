@@ -19,8 +19,8 @@ services:
     restart: unless-stopped
 
   # Kimai Open-Source Time Tracking Database
-  kimai-db:
-    container_name: kimai-db
+  ha-kimai-db:
+    container_name: ha-kimai-db
     image: mariadb:10.11
     environment:
       - MYSQL_DATABASE=kimai
@@ -32,23 +32,23 @@ services:
     restart: unless-stopped
 
   # Kimai Open-Source Time Tracker Application
-  kimai:
-    container_name: kimai
+  ha-kimai:
+    container_name: ha-kimai
     image: kimai/kimai2:apache
     environment:
       - APP_ENV=prod
-      - TRUSTED_HOSTS=localhost,127.0.0.1,kimai,home.clanhanoi.net
-      - DATABASE_URL=mysql://kimai:${KIMAI_DB_PASSWORD:-kimai_secret_pass}@kimai-db:3306/kimai?charset=utf8mb4&serverVersion=10.11.0-MariaDB
+      - TRUSTED_HOSTS=localhost,127.0.0.1,ha-kimai,home.clanhanoi.net
+      - DATABASE_URL=mysql://kimai:${KIMAI_DB_PASSWORD:-kimai_secret_pass}@ha-kimai-db:3306/kimai?charset=utf8mb4&serverVersion=10.11.0-MariaDB
       - TZ=${TZ:-America/New_York}
       - ADMINMAIL=admin@clanhanoi.net
       - ADMINPASS=${KIMAI_ADMIN_PASSWORD:-changeme123}
     volumes:
       - kimai_data:/opt/kimai/var
     ports:
-      - "8085:8001"
+      - "9099:8001"
     restart: unless-stopped
     depends_on:
-      - kimai-db
+      - ha-kimai-db
 
 volumes:
   ha_storage:

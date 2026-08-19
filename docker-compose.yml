@@ -5,13 +5,21 @@ services:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     volumes:
-      - ./config:/config
+      - ha_storage:/config
+      - ./config/configuration.yaml:/config/configuration.yaml
+      - ./config/automations.yaml:/config/automations.yaml
+      - ./config/scripts.yaml:/config/scripts.yaml
+      - ./config/scenes.yaml:/config/scenes.yaml
+      - ./config/dashboards:/config/dashboards
       - /etc/localtime:/etc/localtime:ro
     environment:
       - TZ=${TZ:-America/New_York}
     ports:
       - "8123:8123"
     restart: unless-stopped
+
+volumes:
+  ha_storage:
     # If running on native Linux Docker directly (outside Windows/macOS VM), 
     # network_mode: host is recommended for mDNS discovery of Google Cast / Nest Hub devices:
     # network_mode: host

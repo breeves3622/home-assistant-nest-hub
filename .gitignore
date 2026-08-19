@@ -1,0 +1,18 @@
+# Home Assistant Database & Storage
+config/home-assistant_v2.db*
+config/.storage/
+config/*.log
+config/OPOWER_*.json
+config/nest/
+
+# Secrets & Credentials
+config/secrets.yaml
+
+# System & OS Files
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Cloudflare / Tunnel state
+cloudflared/

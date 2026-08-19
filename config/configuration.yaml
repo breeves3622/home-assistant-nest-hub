@@ -1,0 +1,43 @@
+# Home Assistant Core Configuration
+
+default_config:
+
+homeassistant:
+  name: Home Assistant
+  unit_system: us_customary
+  time_zone: America/New_York
+  # Fill in your HTTPS external URL (required for Google Nest Hub casting)
+  # e.g., https://ha.yourdomain.com or https://xxx.ui.nabu.casa
+  # external_url: "https://your-ha-domain.com"
+  # internal_url: "http://192.168.1.xxx:8123"
+
+# Google Cast Integration for Google Nest Home Hub
+cast:
+
+# HTTP & Proxy settings for Reverse Proxy / Cloudflare Tunnel / Portainer
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 10.0.0.0/8
+    - 127.0.0.1
+    - ::1
+  cors_allowed_origins:
+    - "https://cast.home-assistant.io"
+
+# Lovelace Dashboards Configuration
+lovelace:
+  mode: storage
+  dashboards:
+    nest-hub-dashboard:
+      mode: yaml
+      title: Nest Hub Dashboard
+      icon: mdi:tablet-dashboard
+      show_in_sidebar: true
+      filename: dashboards/nest_hub_dashboard.yaml
+
+# File Includes
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

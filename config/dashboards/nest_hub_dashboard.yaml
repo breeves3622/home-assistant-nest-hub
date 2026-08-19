@@ -1,0 +1,104 @@
+title: Nest Hub Dashboard
+views:
+  - title: Home
+    path: main
+    icon: mdi:home-assistant
+    type: grid
+    square: false
+    columns: 3
+    cards:
+      # Header Card: Time, Date & Weather Summary
+      - type: custom:mushroom-title-card
+        title: "Welcome Home"
+        subtitle: "Google Nest Hub Control Center"
+
+      # Weather Card
+      - type: weather-forecast
+        entity: weather.forecast_home # Replace with your weather entity
+        show_forecast: false
+
+      # Clock / Date display or Quick Status
+      - type: markdown
+        content: >
+          ## {{ now().strftime('%I:%M %p') }}
+          **{{ now().strftime('%A, %B %d') }}**
+
+      # Quick Lighting Controls
+      - type: grid
+        title: Lighting Controls
+        columns: 2
+        square: true
+        cards:
+          - type: button
+            name: Living Room
+            icon: mdi:sofa
+            tap_action:
+              action: toggle
+            entity: light.living_room_light
+
+          - type: button
+            name: Kitchen
+            icon: mdi:countertop
+            tap_action:
+              action: toggle
+            entity: light.kitchen_light
+
+          - type: button
+            name: Bedroom
+            icon: mdi:bed
+            tap_action:
+              action: toggle
+            entity: light.bedroom_light
+
+          - type: button
+            name: All Lights Off
+            icon: mdi:lightbulb-off
+            tap_action:
+              action: call-service
+              service: light.turn_off
+              target:
+                entity_id: all
+
+      # Climate Control
+      - type: thermostat
+        entity: climate.home_thermostat # Replace with your thermostat entity
+        name: Thermostat
+
+      # Media Player Control (Nest Hub or Speaker)
+      - type: media-control
+        entity: media_player.google_nest_hub # Replace with your Nest Hub media player
+
+      # Quick Scenes / Actions
+      - type: grid
+        title: Quick Scenes
+        columns: 3
+        square: false
+        cards:
+          - type: button
+            name: Movie Mode
+            icon: mdi:popcorn
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              target:
+                entity_id: scene.movie_night
+
+          - type: button
+            name: Night Mode
+            icon: mdi:weather-night
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              target:
+                entity_id: scene.good_night
+
+          - type: button
+            name: Recast View
+            icon: mdi:cast
+            tap_action:
+              action: call-service
+              service: cast.show_lovelace_view
+              data:
+                entity_id: media_player.google_nest_hub
+                dashboard_path: nest-hub-dashboard
+                view_path: main

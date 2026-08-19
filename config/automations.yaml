@@ -1,0 +1,34 @@
+# Automations for Home Assistant & Nest Hub Casting
+
+- id: 'cast_dashboard_to_nest_hub'
+  alias: "Cast Dashboard to Nest Hub"
+  description: "Casts the Nest Hub dashboard to the Google Nest Hub media player."
+  trigger:
+    - platform: time
+      at: "07:00:00"
+  condition: []
+  action:
+    - service: cast.show_lovelace_view
+      data:
+        entity_id: media_player.google_nest_hub # Replace with your exact Nest Hub media player entity ID
+        dashboard_path: nest-hub-dashboard
+        view_path: main
+  mode: single
+
+- id: 'recast_dashboard_on_timeout'
+  alias: "Keep Dashboard Active on Nest Hub (Recast Loop)"
+  description: "Google Nest Hubs automatically time out ambient cast views after ~10-15 minutes. This automation refreshes the cast view every 10 minutes during active hours."
+  trigger:
+    - platform: time_pattern
+      minutes: "/10"
+  condition:
+    - condition: time
+      after: "07:00:00"
+      before: "22:00:00"
+  action:
+    - service: cast.show_lovelace_view
+      data:
+        entity_id: media_player.google_nest_hub # Replace with your exact Nest Hub media player entity ID
+        dashboard_path: nest-hub-dashboard
+        view_path: main
+  mode: single

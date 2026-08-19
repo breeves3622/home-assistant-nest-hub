@@ -11,9 +11,10 @@ views:
           **Current Status:** {{ states('input_select.work_status') }}
 
       # Active Timer Card
-      - type: timer
+      - type: tile
         entity: timer.work_break_timer
         name: "Break Countdown"
+        icon: mdi:timer-sand
 
       # Clock & Date Card
       - type: markdown

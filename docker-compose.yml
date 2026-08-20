@@ -42,7 +42,8 @@ services:
     image: kimai/kimai2:apache
     environment:
       - APP_ENV=prod
-      - TRUSTED_HOSTS=localhost,127.0.0.1,ha-kimai,home.clanhanoi.net
+      - APP_SECRET=cb0819e6f3d10459a96e6d1e4e892c90
+      - TRUSTED_HOSTS=.*
       - DATABASE_URL=mysql://kimai:${KIMAI_DB_PASSWORD:-kimai_secret_pass}@ha-kimai-db:3306/kimai?charset=utf8mb4&serverVersion=10.11.0-MariaDB
       - TZ=${TZ:-America/New_York}
       - ADMINMAIL=admin@clanhanoi.net
